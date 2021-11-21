@@ -43,20 +43,26 @@ def run(argv=None, save_main_session=True):
     # --Parvi edit
     # # We use the save_main_session option because one or more DoFn's in this
     # # workflow rely on global context (e.g., a module imported at module level).
-    # pipeline_options = PipelineOptions(pipeline_args)
-    # pipeline_options.view_as(SetupOptions).save_main_session = save_main_session
+    pipeline_options = PipelineOptions(pipeline_args)
+    pipeline_options.view_as(SetupOptions).save_main_session = save_main_session
     #
     # # The pipeline will be run on exiting the with block.
-    # with beam.Pipeline(options=pipeline_options) as p:
-    #     # Read the text file[pattern] into a PCollection.
-    #     lines = p | 'Read' >> ReadFromText(known_args.input)
-    #
-    #     transformandexport = (
-    #             lines | 'GroupBy' >> (beam.GroupBy(lambda s: s[0]))
-    #             | 'Write' >> WriteToText(known_args.output)
-    #     )
+    with beam.Pipeline(options=pipeline_options) as p:
+        # Read the text file[pattern] into a PCollection.
+        lines = p | 'Read' >> ReadFromText(known_args.input)
+
+        # transformandexport = (
+        #         lines | 'GroupBy' >> (beam.GroupBy(lambda s: s[0]))
+        #         | 'Write' >> WriteToText(known_args.output)
+        # )
+
+        data_from_source = (lines
+                            | 'GroupBy the data' >> beam.GroupByKey()
+                            | 'Export results to new file' >> WriteToText('Results', '.txt')
+                            )
+
     # --Parvi edit
-    p = beam.Pipeline(options=PipelineOptions())
+    # p = beam.Pipeline(options=PipelineOptions())
 
 
     # class GetTotal(beam.DoFn):
@@ -64,12 +70,7 @@ def run(argv=None, save_main_session=True):
     #         # get the total transactions for one item
     #         return [(str(element[0]), sum(element[1]))]
 
-    data_from_source = (p
-                        | 'ReadMyFile' >> ReadFromText(known_args.input)
-                        | 'GroupBy the data' >> beam.GroupByKey()
-                        | 'Export results to new file' >> WriteToText('Results', '.txt')
-                        )
-    result = p.run()
+
 
     # # Format the counts into a PCollection of strings.
     # def format_result(word, count):
