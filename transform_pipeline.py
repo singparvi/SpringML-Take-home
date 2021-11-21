@@ -53,7 +53,7 @@ def run(argv=None, save_main_session=True):
     lines = p | 'Read' >> ReadFromText(known_args.input)
 
     transformandexport = (
-        lines | 'GroupBy' >> (beam.GroupBy(lambda s: s[5]))
+        lines | 'GroupBy' >> (beam.GroupBy(lambda s: s[0]))
         | 'Write' >> WriteToText(known_args.output)
     )
 
