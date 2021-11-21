@@ -69,6 +69,7 @@ def run(argv=None, save_main_session=True):
                         | 'GroupBy the data' >> beam.GroupByKey()
                         | 'Export results to new file' >> WriteToText('Results', '.txt')
                         )
+    result = p.run()
 
     # # Format the counts into a PCollection of strings.
     # def format_result(word, count):
