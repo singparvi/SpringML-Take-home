@@ -57,16 +57,6 @@ def run(argv=None, save_main_session=True):
                 | 'Write' >> WriteToText(known_args.output)
         )
 
-        # # Format the counts into a PCollection of strings.
-        # def format_result(word, count):
-        #   return '%s: %d' % (word, count)
-        #
-        # output = counts | 'Format' >> beam.MapTuple(format_result)
-        #
-        # # Write the output using a "Write" transform that has side effects.
-        # # pylint: disable=expression-not-assigned
-        # output | 'Write' >> WriteToText(known_args.output)
-
 
 if __name__ == '__main__':
     logging.getLogger().setLevel(logging.INFO)
